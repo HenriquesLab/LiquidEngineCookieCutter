@@ -1,4 +1,4 @@
-# Example Repo of a Python package implementing NanoPyx's Liquid Engine
+# Cookicutter of a Python package implementing NanoPyx's Liquid Engine
 
 This repository exemplifies how to take advantage of [NanoPyx]'s Liquid Engine in your own python packages.  
 Here you can find a minimal working example for a simple cython implementation.  
