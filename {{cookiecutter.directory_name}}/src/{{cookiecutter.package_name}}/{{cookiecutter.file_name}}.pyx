@@ -1,9 +1,9 @@
 from nanopyx.__liquid_engine__ import LiquidEngine
 
 class {{cookiecutter.class_name}}(LiquidEngine):
-    # change the runtypes you want to implement to False in the super().__init__() call.
     def __init__(self, clear_benchmarks=False, testing=False):
         self._designation = "{{cookiecutter.class_name}}"
+        # change the runtypes you want to implement to True in the super().__init__() call.
         super().__init__(clear_benchmarks=clear_benchmarks, testing=testing, 
                         opencl_=False, unthreaded_=True, threaded_=False, threaded_static_=False, 
                         threaded_dynamic_=False, threaded_guided_=False,
