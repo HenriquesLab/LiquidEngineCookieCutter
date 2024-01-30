@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=43.0.0", "wheel", "cython", "build"]
+requires = ["setuptools>=43.0.0", "wheel", "cython", "build","mako","numpy"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -12,7 +12,8 @@ license = { file = "LICENSE.txt" }
 
 dependencies = [
     "cython",
-    "nanopyx"
+    "nanopyx",
+    "mako"
 ]
 
 

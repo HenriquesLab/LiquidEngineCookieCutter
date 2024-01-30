@@ -1,13 +1,23 @@
+<%!
+schedulers = ['unthreaded','threaded','threaded_guided','threaded_dynamic','threaded_static']
+%># cython: infer_types=True, wraparound=False, nonecheck=False, boundscheck=False, cdivision=True, language_level=3, profile=False, autogen_pxd=False
+
+import numpy as np
+cimport numpy as np
+from cython.parallel import parallel, prange
 from nanopyx.__liquid_engine__ import LiquidEngine
 
 class {{cookiecutter.class_name}}(LiquidEngine):
+
     def __init__(self, clear_benchmarks=False, testing=False):
         self._designation = "{{cookiecutter.class_name}}"
+
         # change the runtypes you want to implement to True in the super().__init__() call.
         super().__init__(clear_benchmarks=clear_benchmarks, testing=testing, 
                         opencl_=False, unthreaded_=True, threaded_=False, threaded_static_=False, 
                         threaded_dynamic_=False, threaded_guided_=False,
                         njit_=False, python_=True, transonic_=False, cuda_=False, dask_=False)
+
         self._default_benchmarks = {'Unthreaded': {"(['shape(100, 100)', 'shape(5, 5)'], {})": [250000, 0.0002, 0.0002, 0.0002], "(['shape(500, 500)', 'shape(11, 11)'], {})": [30250000, 0.03, 0.03, 0.03]}, 'Python': {"(['shape(100, 100)', 'shape(5, 5)'], {})": [250000, 0.0002, 0.0002, 0.0002], "(['shape(500, 500)', 'shape(11, 11)'], {})": [30250000, 0.03, 0.03, 0.03]}} # do this in case you don't want to make running the benchmark method mandatory.
         # structure of this dictionary should follow this structure:
         # The benchmark file is read as dict of dicts.
@@ -25,20 +35,28 @@ class {{cookiecutter.class_name}}(LiquidEngine):
     def run(self, input_array, run_type=None):
         return self._run(input_array, run_type=run_type)
 
-    def _run_unthreaded(self, float[:, :] input_array):
-        # Implement unthreaded version of the function
-
+    % for sch in schedulers:
+    def _run_${sch}(self, float[:, :] input_array):
         cdef float array_sum = 0.0
 
         cdef int rows = input_array.shape[0]
         cdef int cols = input_array.shape[1]
 
         cdef int i,j
-        for i in range(rows):
-            for j in range(cols):
-                array_sum = array_sum + input_array[i, j]
+        with nogil:
+            % if sch=='unthreaded':
+            for i in range(rows):
+            % elif sch=='threaded':
+            for i in prange(rows):
+            % else:
+            for i in prange(rows, schedule="${sch.split('_')[1]}"):
+            % endif
+                for j in range(cols):
+                    array_sum = array_sum + input_array[i, j]
 
         return array_sum
+
+    % endfor
 
     def _run_python(self, input_array):
         array_sum = 0.0
