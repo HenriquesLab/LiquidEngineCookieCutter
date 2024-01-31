@@ -6,6 +6,10 @@ import numpy as np
 cimport numpy as np
 from cython.parallel import parallel, prange
 from nanopyx.__liquid_engine__ import LiquidEngine
+from nanopyx.__opencl__ import cl, cl_array
+
+cdef extern from "_c_{{cookiecutter.file_name}}.h":
+    float _c_{{cookiecutter.file_name}}(float x, float y) nogil
 
 class {{cookiecutter.class_name}}(LiquidEngine):
 
@@ -14,8 +18,8 @@ class {{cookiecutter.class_name}}(LiquidEngine):
 
         # change the runtypes you want to implement to True in the super().__init__() call.
         super().__init__(clear_benchmarks=clear_benchmarks, testing=testing, 
-                        opencl_=False, unthreaded_=True, threaded_=False, threaded_static_=False, 
-                        threaded_dynamic_=False, threaded_guided_=False,
+                        opencl_=True, unthreaded_=True, threaded_=True, threaded_static_=True, 
+                        threaded_dynamic_=True, threaded_guided_=True,
                         njit_=False, python_=True, transonic_=False, cuda_=False, dask_=False)
 
         self._default_benchmarks = {'Unthreaded': {"(['shape(100, 100)', 'shape(5, 5)'], {})": [250000, 0.0002, 0.0002, 0.0002], "(['shape(500, 500)', 'shape(11, 11)'], {})": [30250000, 0.03, 0.03, 0.03]}, 'Python': {"(['shape(100, 100)', 'shape(5, 5)'], {})": [250000, 0.0002, 0.0002, 0.0002], "(['shape(500, 500)', 'shape(11, 11)'], {})": [30250000, 0.03, 0.03, 0.03]}} # do this in case you don't want to make running the benchmark method mandatory.
@@ -35,12 +39,16 @@ class {{cookiecutter.class_name}}(LiquidEngine):
     def run(self, input_array, run_type=None):
         return self._run(input_array, run_type=run_type)
 
+    def benchmark(self,input_array,run_type=None):
+        return super().benchmark(input_array)
+
     % for sch in schedulers:
     def _run_${sch}(self, float[:, :] input_array):
-        cdef float array_sum = 0.0
+        cdef float[:] array_sum = np.empty((input_array.shape[0],)).astype(np.float32)
 
         cdef int rows = input_array.shape[0]
         cdef int cols = input_array.shape[1]
+        cdef float row_sum
 
         cdef int i,j
         with nogil:
@@ -51,18 +59,61 @@ class {{cookiecutter.class_name}}(LiquidEngine):
             % else:
             for i in prange(rows, schedule="${sch.split('_')[1]}"):
             % endif
+                row_sum = 0.0
                 for j in range(cols):
-                    array_sum = array_sum + input_array[i, j]
+                    row_sum = _c_{{cookiecutter.file_name}}(row_sum,input_array[i, j])
+                array_sum[i] = row_sum
 
-        return array_sum
+        return np.asarray(array_sum).astype(np.float32)
 
     % endfor
 
     def _run_python(self, input_array):
-        array_sum = 0.0
+        array_sum = np.empty((input_array.shape[0],))
 
         for i in range(input_array.shape[0]):
+            row_sum = 0.0
             for j in range(input_array.shape[1]):
-                array_sum = array_sum + input_array[i, j]
+                row_sum = row_sum + input_array[i, j]
+
+            array_sum[i] = row_sum
 
         return array_sum
+
+    def _run_opencl(self, input_array, dict device):
+
+        cl_ctx = cl.Context([device['device']])
+        dc = device['device']
+        cl_queue = cl.CommandQueue(cl_ctx)
+
+        code = self._get_cl_code("{{cookiecutter.file_name}}.cl", device['DP'])
+        prg = cl.Program(cl_ctx,code).build()
+        knl_{{cookiecutter.file_name}} = prg.kernel_{{cookiecutter.file_name}}
+
+        rows = input_array.shape[0]
+        cols = input_array.shape[1]
+
+        input_cl = cl.Buffer(cl_ctx, cl.mem_flags.READ_ONLY, input_array.nbytes)
+        cl.enqueue_copy(cl_queue, input_cl, input_array).wait()
+
+        output_array = np.empty((input_array.shape[0],)).astype(np.float32)
+        output_cl = cl.Buffer(cl_ctx, cl.mem_flags.READ_ONLY, output_array.nbytes)
+
+        knl_{{cookiecutter.file_name}}(cl_queue,
+                                       (rows,),
+                                       None,
+                                       input_cl,
+                                       output_cl,
+                                       np.int32(cols))
+
+        cl_queue.finish()
+        cl.enqueue_copy(cl_queue, output_array, output_cl).wait()
+
+        return output_array
+
+
+    def _compare_runs(self, output_1, output_2):
+        if np.allclose(output_1,output_2):
+            return True
+        else:
+            return False
