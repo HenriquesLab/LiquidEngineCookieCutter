@@ -50,4 +50,7 @@ You now have a minimal working example of a Liquid Engine class.
     python setup.py build_ext --inplace
     ```
 
-2. Depending on the use case you might want to overload some of the functions that the Liquid Engine base class provides. See [Liquid Engine wiki - 3.5. Implementing Liquid Engine Methods](https://github.com/HenriquesLab/NanoPyx/wiki/3.5.-Implementing-Liquid-Engine-Methods) for more information. 
+2. This cookiecutter showcases how the the Mako templating engine is used within the Liquid Engine. Before compilation all templates are rendered and moved to their respective folders overriding any old files with the same name. This means that if you to edit the example files you need to do it on the corresponding Mako template. If you don't want to rely on templating delete the files inside ```src/mako_templates``` and edit the files as usual. 
+
+
+3. Depending on the use case you might want to overload some of the functions that the Liquid Engine base class provides. See [Liquid Engine wiki - 3.5. Implementing Liquid Engine Methods](https://github.com/HenriquesLab/NanoPyx/wiki/3.5.-Implementing-Liquid-Engine-Methods) for more information. 
