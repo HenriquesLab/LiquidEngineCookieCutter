@@ -1,7 +1,7 @@
 {
     "directory_name":"MyLiquidEngineFolder",
     "file_name":"MyLiquidEngine",
-    "package_name":"MyLEPackage",
+    "package_name":"mylepackage",
     "class_name":"MyLiquidEngineClass",
     "description":"My first LE package"
 }
