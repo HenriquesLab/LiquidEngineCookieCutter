@@ -12,7 +12,7 @@ ALL_TEMP_FOLDERS = ["licenses"]
 
 def remove_temp_folders(temp_folders):
     for folder in temp_folders:
-        print("Removing temporary folder: %s", folder)
+        #print("Removing temporary folder: %s", folder)
         shutil.rmtree(folder, ignore_errors=True)
 
 
