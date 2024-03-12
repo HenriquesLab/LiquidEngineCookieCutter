@@ -3,5 +3,13 @@
     "file_name":"MyLiquidEngine",
     "package_name":"mylepackage",
     "class_name":"MyLiquidEngineClass",
-    "description":"My first LE package"
+    "description":"My first LE package",
+    "license": [
+        "BSD-3",
+        "MIT",
+        "Mozilla Public License 2.0",
+        "Apache Software License 2.0",
+        "GNU LGPL v3.0",
+        "GNU GPL v3.0"
+    ]
 }
