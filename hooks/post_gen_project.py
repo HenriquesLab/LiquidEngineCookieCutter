@@ -20,6 +20,12 @@ if __name__ == "__main__":
     remove_temp_folders(ALL_TEMP_FOLDERS)
 
     msg = """ 
+    _  _               ___
+    | \| |__ _ _ _  ___| _ \_  ___ __
+    | .` / _` | ' \/ _ \  _/ || \ \ /
+    |_|\_\__,_|_||_\___/_|  \_, /_\_\
+        [ (( X )) ]     *|<|__/==/==
+    |-- Python Nanoscopy Library --|
     Your Liquid Engine template is now ready! 
     Now all you need is to install it in your environment.
 
