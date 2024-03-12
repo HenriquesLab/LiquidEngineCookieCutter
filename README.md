@@ -36,10 +36,16 @@ cd MyLiquidEngineFolder
 pip install -e .
 ```
     
-This installation should also install the newest version of nanopyx and required dependencies. To test if everything went according to plan you can try to run the provided test script.
+This installation should also install the newest version of nanopyx and required dependencies. Alongside this example you can find example tests that you can run with `pytest`.
 
 ```bash
-python test.py
+pytest
+```
+
+This template also shows how you can use nox to test on multiple python versions and in clean temporary environments. Run the helper script `runNoxTools.py` python script to spawn a nox testing session. 
+
+```bash
+python runNoxTools.py
 ```
 
 You now have a minimal working example of a Liquid Engine class. 

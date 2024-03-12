@@ -37,6 +37,10 @@ if __name__ == "__main__":
      
      pip install -e .
 
+    3. Verify installation was successfull
+
+     pytest
+
     For more information check out our official documentation:
 
     https://github.com/HenriquesLab/NanoPyx/wiki 
