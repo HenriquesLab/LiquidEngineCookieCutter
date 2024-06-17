@@ -13,14 +13,11 @@ cdef extern from "_c_{{cookiecutter.file_name}}.h":
 
 class {{cookiecutter.class_name}}(LiquidEngine):
 
-    def __init__(self, clear_benchmarks=False, testing=False):
+    def __init__(self, clear_benchmarks=False, testing=False, verbose=True):
         self._designation = "{{cookiecutter.class_name}}"
 
         # change the runtypes you want to implement to True in the super().__init__() call.
-        super().__init__(clear_benchmarks=clear_benchmarks, testing=testing, 
-                        opencl_=True, unthreaded_=True, threaded_=True, threaded_static_=True, 
-                        threaded_dynamic_=True, threaded_guided_=True,
-                        njit_=False, python_=True, transonic_=False, cuda_=False, dask_=False)
+        super().__init__(clear_benchmarks=clear_benchmarks, testing=testing,verbose=True)
 
         self._default_benchmarks = {'Unthreaded': {"(['shape(100, 100)', 'shape(5, 5)'], {})": [250000, 0.0002, 0.0002, 0.0002], "(['shape(500, 500)', 'shape(11, 11)'], {})": [30250000, 0.03, 0.03, 0.03]}, 'Python': {"(['shape(100, 100)', 'shape(5, 5)'], {})": [250000, 0.0002, 0.0002, 0.0002], "(['shape(500, 500)', 'shape(11, 11)'], {})": [30250000, 0.03, 0.03, 0.03]}} # do this in case you don't want to make running the benchmark method mandatory.
         # structure of this dictionary should follow this structure:
