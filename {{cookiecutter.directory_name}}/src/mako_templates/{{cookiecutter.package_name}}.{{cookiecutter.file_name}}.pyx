@@ -5,8 +5,8 @@ schedulers = ['unthreaded','threaded','threaded_guided','threaded_dynamic','thre
 import numpy as np
 cimport numpy as np
 from cython.parallel import parallel, prange
-from nanopyx.__liquid_engine__ import LiquidEngine
-from nanopyx.__opencl__ import cl, cl_array
+from liquid_engine import LiquidEngine
+from liquid_engine.__opencl__ import cl, cl_array
 
 cdef extern from "_c_{{cookiecutter.file_name}}.h":
     float _c_{{cookiecutter.file_name}}(float x, float y) nogil

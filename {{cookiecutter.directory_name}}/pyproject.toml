@@ -12,7 +12,7 @@ license = { file = "LICENSE.txt" }
 
 dependencies = [
     "cython",
-    "nanopyx",
+    "liquid_engine",
     "mako",
     "nox>=2022.11.21",
     "pytest==7.2", # required to work with pytest-cython (https://github.com/lgpage/pytest-cython/issues/58)
