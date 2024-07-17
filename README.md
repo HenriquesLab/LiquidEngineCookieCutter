@@ -63,4 +63,4 @@ You now have a minimal working example of a Liquid Engine class.
 
 3. Using a Mako template entails writing a template file in the mako_templates folder. The name of the file should represent the relative path where the rendered template should live. All templates are rendered at compile time. For more information check out the [Mako official documentation](https://docs.makotemplates.org/en/latest/index.html).
 
-4. Depending on the use case you might want to overload some of the functions that the Liquid Engine base class provides. See [Liquid Engine wiki - 3.5. Implementing Liquid Engine Methods](https://github.com/HenriquesLab/NanoPyx/wiki/3.5.-Implementing-Liquid-Engine-Methods) for more information. 
+4. Depending on the use case you might want to overload some of the functions that the Liquid Engine base class provides. See [Tutorial ‐ Implementing Liquid Engine Methods](https://github.com/HenriquesLab/LiquidEngine/wiki/Tutorial-%E2%80%90-Implementing-Liquid-Engine-Methods) for more information. 
